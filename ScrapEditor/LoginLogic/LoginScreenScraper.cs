@@ -6,29 +6,34 @@ namespace ScrapEditor.LoginLogic
 {
     public class LoginScreenScraper : ILoginLogic
     {
-        private Dictionary<string, User> _users;
-        private ScreenScraperAPI api;
+        private readonly Dictionary<string, User> _users;
+        private readonly ScreenScraperAPI _api;
         public LoginScreenScraper(ScreenScraperAPI api)
         {
-            this.api = api;
+            this._api = api;
             _users = new Dictionary<string, User>();
         }
         public async Task<string> LoginUser(string username, string password)
         {
-            if (!await api.Login(username, password)) return null;
+            if (!await _api.Login(username, password)) return null;
             var guid = Guid.NewGuid().ToString();
             _users.Add(guid, new User(username, password));
             return guid;
         }
 
-        public Task<User> GetUser(string uuid)
+        public async Task<User> GetUser(string uuid)
         {
-            throw new System.NotImplementedException();
+            return _users.GetValueOrDefault(uuid, null);
         }
 
-        public Task<bool> DisconnectUser(string uuid)
+        public async Task<bool> DisconnectUser(string uuid)
         {
-            throw new System.NotImplementedException();
+            if (!_users.ContainsKey(uuid))
+            {
+                return false;
+            }
+            _users.Remove(uuid);
+            return true;
         }
     }
 }
