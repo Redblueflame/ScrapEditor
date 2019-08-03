@@ -1,3 +1,6 @@
+using System.IO;
+using Newtonsoft.Json;
+
 namespace ScrapEditor
 {
     public class Configuration
@@ -8,7 +11,11 @@ namespace ScrapEditor
 
         public static Configuration LoadConfiguration(string fileName)
         {
-            
+            using (var r = new StreamReader(fileName))
+            {
+                var json = r.ReadToEnd();
+                return JsonConvert.DeserializeObject<Configuration>(json);
+            }
         }
     }
 }
