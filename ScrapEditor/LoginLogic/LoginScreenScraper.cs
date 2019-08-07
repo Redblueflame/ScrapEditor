@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ScrapEditor.LoginLogic
@@ -7,8 +8,8 @@ namespace ScrapEditor.LoginLogic
     public class LoginScreenScraper : ILoginLogic
     {
         private readonly Dictionary<string, User> _users;
-        private readonly ScreenScraperAPI _api;
-        public LoginScreenScraper(ScreenScraperAPI api)
+        private readonly IScreenScraperAPI _api;
+        public LoginScreenScraper(IScreenScraperAPI api)
         {
             this._api = api;
             _users = new Dictionary<string, User>();
@@ -20,12 +21,22 @@ namespace ScrapEditor.LoginLogic
             _users.Add(guid, new User(username, password));
             return guid;
         }
-
+        public Task<string> AddUser(string username, string password)
+        {
+            if (_users.Any(x => x.Value.Username == username))
+            {
+                return null;
+            }
+            var guid = Guid.NewGuid().ToString();
+            _users.Add(guid, new User(username, password));
+            return Task.FromResult(guid);
+        }
+        
         public async Task<User> GetUser(string uuid)
         {
             return _users.GetValueOrDefault(uuid, null);
         }
-
+        
         public async Task<bool> DisconnectUser(string uuid)
         {
             if (!_users.ContainsKey(uuid))

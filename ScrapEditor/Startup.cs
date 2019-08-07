@@ -10,22 +10,31 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ScrapEditor.LoginLogic;
 
 namespace ScrapEditor
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configurationService)
         {
-            Configuration = configuration;
+            ConfigurationService = configurationService;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration ConfigurationService { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            var config = Configuration.LoadConfiguration("config.json");
+            var api = new ScreenScraperAPI(config);
+            var login = new LoginScreenScraper(api);
+            var mvc = services.AddMvc();
+            mvc.AddXmlSerializerFormatters();
+            mvc.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSingleton(typeof(ILoginLogic), login);
+            services.AddSwaggerDocument();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,7 +49,8 @@ namespace ScrapEditor
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseOpenApi();
             app.UseSwaggerUi3();
