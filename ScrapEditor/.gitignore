@@ -437,4 +437,4 @@ fabric.properties
 #Custom fixes:
 
 #Remove configuration file, as it can cause leakage of information
-config.json
+Scr/config.json
