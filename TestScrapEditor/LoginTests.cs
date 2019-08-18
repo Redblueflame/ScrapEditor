@@ -1,28 +1,29 @@
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Flurl.Http.Testing;
-using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
 using Moq;
 using NUnit.Framework;
 using ScrapEditor;
 using ScrapEditor.LoginLogic;
 
-namespace Tests
+namespace TestScrapEditor
 {
-    public class Tests
+    public class LoginTests
     {
         private HttpTest _httpTest;
-        private LoginScreenScraper _login;
-        private Configuration _config;
+        private LoginScreenScraper _loginValid;
+        private ConfigurationFile _config;
+        private string _id;
         [SetUp]
         public void CreateHttpTest() {
             _httpTest = new HttpTest();
-            _config = new Configuration
+            _config = new ConfigurationFile
             {
                 DevID = "PleaseReplaceMe",
                 DevPassword = "PleaseReplaceMe",
-                SoftName = "ScrapEditor"
+                SoftName = "ScrapEditor",
+                DBLink = "http://live-test.ravendb.net",
+                DBCertPath = "none"
             };
             Mock<IScreenScraperAPI> mockAPI = new Mock<IScreenScraperAPI>();
             mockAPI.Setup(t => 
@@ -30,7 +31,8 @@ namespace Tests
             );
             var api = mockAPI.Object;
             //Test with a sucessful login
-            _login = new LoginScreenScraper(api);
+            _loginValid = new LoginScreenScraper(api);
+            _id = _loginValid.AddUser("UnitTestsUser", "UnitTestsPasswd").Result;
         }
 
         [TearDown]
@@ -45,23 +47,29 @@ namespace Tests
             {
                 File.Delete("test.json");
             }
-            var config = Configuration.LoadConfiguration("test.json");
+            var config = ConfigurationFile.LoadConfiguration("test.json");
             Assert.AreEqual("PleaseReplaceMe", config.DevID);
             Assert.AreEqual("PleaseReplaceMe", config.DevPassword);
             Assert.AreEqual("ScrapEditor", config.SoftName);
+            Assert.AreEqual("http://live-test.ravendb.net", config.DBLink);
+            Assert.AreEqual("ScrapEditor-Dev", config.DBName);
+            Assert.AreEqual("none", config.DBCertPath);
             var text = File.ReadAllText("test.json");
-            Assert.AreEqual("{\"DevID\":\"PleaseReplaceMe\",\"DevPassword\":\"PleaseReplaceMe\",\"SoftName\":\"ScrapEditor\"}", text);
+            Assert.AreEqual("{\"DevID\":\"PleaseReplaceMe\",\"DevPassword\":\"PleaseReplaceMe\",\"SoftName\":\"ScrapEditor\",\"DBLink\":\"http://live-test.ravendb.net\",\"DBCertPath\":\"none\",\"DBName\":\"ScrapEditor-Dev\"}", text);
             File.Delete("test.json");
         }
 
         [Test]
         public void TestExistingConfiguration()
         {
-            File.WriteAllText("test.json","{\"DevID\":\"redblueflame\",\"DevPassword\":\"UnitTests\",\"SoftName\":\"ScrapEditorV0.1\"}");
-            var config = Configuration.LoadConfiguration("test.json");
+            File.WriteAllText("test.json","{\"DevID\":\"redblueflame\",\"DevPassword\":\"UnitTests\",\"SoftName\":\"ScrapEditorV0.1\",\"DBLink\":\"http://live-test.ravendb.net\",\"DBCertPath\":\"none\", \"DBName\":\"ScrapEditor-Dev\"}");
+            var config = ConfigurationFile.LoadConfiguration("test.json");
             Assert.AreEqual("redblueflame", config.DevID);
             Assert.AreEqual("UnitTests", config.DevPassword);
             Assert.AreEqual("ScrapEditorV0.1", config.SoftName);
+            Assert.AreEqual("http://live-test.ravendb.net", config.DBLink);
+            Assert.AreEqual("none", config.DBCertPath);
+            Assert.AreEqual("ScrapEditor-Dev", config.DBName);
             File.Delete("test.json");
         }
 
@@ -87,14 +95,16 @@ namespace Tests
         }
         [Test]
         public async Task TestGuidLogin() {
-            var id = await _login.LoginUser("test", "test");
+            var id = await _loginValid.LoginUser("test", "test");
             Assert.That(id, Does.Match(@"^[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}$"));
         }
 
         [Test]
         public async Task TestGetLogin()
         {
-            var id = await _login.GetUser();
+            var user = await _loginValid.GetUser(_id);
+            Assert.AreEqual("UnitTestsUser", user.Username);
+            Assert.AreEqual("UnitTestsPasswd", user.Password);
         }
     }
 }

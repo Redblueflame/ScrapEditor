@@ -5,15 +5,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CXuesong.MW.WikiClientLibrary" Version="0.6.5" />
         <PackageReference Include="Flurl" Version="2.8.2" />
         <PackageReference Include="Flurl.Http" Version="2.4.2" />
-        <PackageReference Include="LinqToWiki" Version="1.5.0" />
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.12" />
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.0.4" />
+        <PackageReference Include="RavenDB.Client" Version="4.2.2" />
     </ItemGroup>
 
 </Project>

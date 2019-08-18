@@ -8,8 +8,8 @@ namespace ScrapEditor
 {
     public class ScreenScraperAPI : IScreenScraperAPI
     {
-        private Configuration config;
-        public ScreenScraperAPI(Configuration config)
+        private ConfigurationFile config;
+        public ScreenScraperAPI(ConfigurationFile config)
         {
             this.config = config;
         }
@@ -31,11 +31,12 @@ namespace ScrapEditor
                     .SetQueryParam("ssid", userName)
                     .SetQueryParam("sspassword", password)
                     .GetAsync();
+                // Console.WriteLine(person.StatusCode);
                 return person.StatusCode == HttpStatusCode.OK;
             }
-            catch (FlurlHttpException e)
+            catch (FlurlHttpException)
             {
-                Console.WriteLine($"Error {e.Call.Response.StatusCode} while making request. \n Error response: {await e.Call.Response.Content.ReadAsStringAsync()} in request {e.Call.FlurlRequest.Url}");
+                // Console.WriteLine($"Error {e.Call.Response.StatusCode} while making request. \n Error response: {await e.Call.Response.Content.ReadAsStringAsync()} in request {e.Call.FlurlRequest.Url}");
                 return false;
             }
         }

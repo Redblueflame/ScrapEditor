@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NSwag;
 using ScrapEditor.LoginLogic;
+using static ScrapEditor.Controllers.GamesListController;
 
 namespace ScrapEditor.Controllers
 {
@@ -23,29 +20,30 @@ namespace ScrapEditor.Controllers
         /// </summary>
         /// <param name="username">User's username</param>
         /// <param name="password">User's password</param>
-        /// <returns>A <see cref="LoginResult"/> object.</returns>
+        /// <returns>A <see cref="Controllers.Login"/> object.</returns>
         /// <response code="200">Successfully executed request.</response>
         /// <response code="500">Error while executing request.</response>
         [HttpPost("login")]
-        [ProducesResponseType(typeof(LoginResult), 200)]
-        [ProducesResponseType(typeof(void), 500)]
-        public async Task<LoginResult> Login([FromQuery] string username, [FromQuery] string password)
+        [ProducesResponseType(typeof(Login), 200)]
+        [ProducesResponseType(typeof(Error), 500)]
+        public async Task<IActionResult> Login([FromQuery] string username, [FromQuery] string password)
         {
             var status = await _login.LoginUser(username, password);
             if (status == null)
             {
-                return new LoginResult
+                return NotFound(new Error
                 {
-                    IsSuccess = false
-                };
+                    ErrorName = "LoginNotValid",
+                    ErrorMessage = "The username and password provided does not correspond..."
+                });
             }
 
-            return new LoginResult
+            return Ok(new Login
             {
-                IsSuccess = true,
                 Token = status,
                 Username = username
-            };
+            }
+            );
         }
         /// <summary>
         /// 
@@ -56,7 +54,7 @@ namespace ScrapEditor.Controllers
         /// <response code="404">Token not found.</response>
         [HttpGet("disconnect")]
         [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(typeof(void), 404)]
+        [ProducesResponseType(typeof(Error), 404)]
         public async Task<IActionResult> Disconnect([FromQuery] string token)
         {
             var result = await _login.DisconnectUser(token);
@@ -65,7 +63,11 @@ namespace ScrapEditor.Controllers
                 return Ok("OK");
             }
 
-            return NotFound();
+            return NotFound(new Error
+            {
+                ErrorName = "NotFound",
+                ErrorMessage = "The user requested was not found."
+            });
         }
     }
 }

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using ScrapEditor.LoginLogic;
+using ScrapEditor.ScrapLogic;
 
 namespace ScrapEditor
 {
@@ -26,13 +22,21 @@ namespace ScrapEditor
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = Configuration.LoadConfiguration("config.json");
+            var config = ConfigurationFile.LoadConfiguration("config.json");
             var api = new ScreenScraperAPI(config);
             var login = new LoginScreenScraper(api);
+            var database = new Database(config);
+            var manager = new ScrapManager(database);
+            var scrap = new Thread(manager.StartScrap);
+            Console.WriteLine("Starting scrap thread...");
+            scrap.Name = "ScrapThread";
+            scrap.Start();
             var mvc = services.AddMvc();
             mvc.AddXmlSerializerFormatters();
             mvc.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton(typeof(ILoginLogic), login);
+            services.AddSingleton(typeof(IDatabase), database);
+            services.AddSingleton(typeof(IScrapManager), manager);
             services.AddSwaggerDocument();
             
         }

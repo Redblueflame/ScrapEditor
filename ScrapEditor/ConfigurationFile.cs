@@ -4,27 +4,33 @@ using Newtonsoft.Json;
 
 namespace ScrapEditor
 {
-    public class Configuration : IConfiguration
+    public class ConfigurationFile : IConfigurationFile
     {
         public string DevID { get; set; }
         public string DevPassword { get; set; }
         public string SoftName { get; set; }
+        public string DBLink { get; set; }
+        public string DBCertPath { get; set; }
+        public string DBName { get; set; }
 
-        public static Configuration LoadConfiguration(string fileName)
+        public static ConfigurationFile LoadConfiguration(string fileName)
         {
             if (File.Exists(fileName)) {
                 using (var r = new StreamReader(fileName))
                 {
                     var json = r.ReadToEnd();
-                    return JsonConvert.DeserializeObject<Configuration>(json);
+                    return JsonConvert.DeserializeObject<ConfigurationFile>(json);
                 }
             }
             Console.WriteLine("Config file not found...");
-            var config = new Configuration
+            var config = new ConfigurationFile
             {
                 DevID = "PleaseReplaceMe",
                 DevPassword = "PleaseReplaceMe",
-                SoftName = "ScrapEditor"
+                SoftName = "ScrapEditor",
+                DBLink = "http://live-test.ravendb.net",
+                DBCertPath = "none",
+                DBName = "ScrapEditor-Dev"
             };
             using (StreamWriter file = File.CreateText(fileName))
             {
