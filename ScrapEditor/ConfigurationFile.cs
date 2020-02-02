@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using Newtonsoft.Json;
 
 namespace ScrapEditor
@@ -14,6 +15,7 @@ namespace ScrapEditor
         public string DBName { get; set; }
         public string DefaultUser { get; set; }
         public string DefaultPassword { get; set; }
+        public string AuthKey { get; set; }
 
         public static ConfigurationFile LoadConfiguration(string fileName)
         {
@@ -25,6 +27,14 @@ namespace ScrapEditor
                 }
             }
             Console.WriteLine("Config file not found...");
+            var authKey = "";
+            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+            {
+                var tokenData = new byte[256];
+                rng.GetBytes(tokenData);
+                authKey = Convert.ToBase64String(tokenData);
+            }
+
             var config = new ConfigurationFile
             {
                 DevID = "PleaseReplaceMe",
@@ -34,7 +44,8 @@ namespace ScrapEditor
                 DBCertPath = "none",
                 DBName = "ScrapEditor-Dev",
                 DefaultUser = "ReplaceMePlease",
-                DefaultPassword = "xxxyyyzzz"
+                DefaultPassword = "xxxyyyzzz",
+                AuthKey = authKey
             };
             using (StreamWriter file = File.CreateText(fileName))
             {

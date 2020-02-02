@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Raven.Client.Documents;
@@ -15,20 +16,24 @@ using ScrapEditor.ScrapLogic;
 namespace ScrapEditor.Controllers
 {
     [ApiController]
-    public class ScreenScraperLinkController : ControllerBase
+    [Route("/admin")]
+    public class AdministrationController : ControllerBase
     {
         private readonly Database _db;
         private readonly ScrapManager _manager;
         private readonly ScreenScraperAPI _api;
+        private readonly IConfigurationFile _config;
         private readonly ILogger _logger;
 
-        public ScreenScraperLinkController(IDatabase db, IScrapManager manager,
-            ILogger<ScreenScraperLinkController> logger, IScreenScraperAPI api)
+        public AdministrationController(IDatabase db, IScrapManager manager,
+            ILogger<AdministrationController> logger, IScreenScraperAPI api,
+            IConfigurationFile config)
         {
-            this._db = (Database) db;
-            this._manager = (ScrapManager) manager;
-            this._api = (ScreenScraperAPI) api;
+            _db = (Database) db;
+            _manager = (ScrapManager) manager;
+            _api = (ScreenScraperAPI) api;
             _logger = logger;
+            _config = config;
         }
 
         /// <summary>
@@ -36,9 +41,18 @@ namespace ScrapEditor.Controllers
         /// </summary>
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(Error), 404)]
-        [HttpGet("/auto-link")]
-        public async Task<IActionResult> AutoLink([FromQuery] int start, [FromQuery] int take)
+        [HttpGet("auto-link")]
+        public async Task<IActionResult> AutoLink([FromQuery] int start, [FromQuery] int take, [FromQuery] string auth = "")
         {
+            if (auth != _config.AuthKey)
+            {
+                return BadRequest(new Error
+                {
+                    ErrorName = "NotAuthorized",
+                    ErrorMessage = "The auth key given doesn't match. Please check your key."
+                }
+                );
+            }
             _logger.LogInformation("Starting AutoLink...");
             // Get games in database
             using (var session = _db.store.OpenAsyncSession())
@@ -67,9 +81,18 @@ namespace ScrapEditor.Controllers
 
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(Error), 404)]
-        [HttpGet("/scrap-games")]
-        public async Task<IActionResult> AutoScrap([FromQuery] int start, [FromQuery] int take)
+        [HttpGet("scrap-games")]
+        public async Task<IActionResult> AutoScrap([FromQuery] int start, [FromQuery] int take, [FromQuery] string auth = "")
         {
+            if (auth != _config.AuthKey)
+            {
+                return BadRequest(new Error
+                    {
+                        ErrorName = "NotAuthorized",
+                        ErrorMessage = "The auth key given doesn't match. Please check your key."
+                    }
+                );
+            }
             // Query games
             using (var session = _db.store.OpenAsyncSession())
             {
@@ -111,9 +134,18 @@ namespace ScrapEditor.Controllers
 
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(Error), 404)]
-        [HttpGet("/mass-upload/{nb}")]
-        public async Task<IActionResult> MassUpload([FromRoute] int nb)
+        [HttpGet("mass-upload/{nb}")]
+        public async Task<IActionResult> MassUpload([FromRoute] int nb, [FromQuery] string auth = "")
         {
+            if (auth != _config.AuthKey)
+            {
+                return BadRequest(new Error
+                    {
+                        ErrorName = "NotAuthorized",
+                        ErrorMessage = "The auth key given doesn't match. Please check your key."
+                    }
+                );
+            }
             // Query games
             using (var session = _db.store.OpenAsyncSession())
             {

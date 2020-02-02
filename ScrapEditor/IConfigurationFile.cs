@@ -10,5 +10,6 @@ namespace ScrapEditor
         string DBName { get; set; }
         string DefaultUser { get; set; }
         string DefaultPassword { get; set; }
+        string AuthKey { get; set; }
     }
 }
