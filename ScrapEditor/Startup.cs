@@ -37,6 +37,7 @@ namespace ScrapEditor
             services.AddSingleton(typeof(ILoginLogic), login);
             services.AddSingleton(typeof(IDatabase), database);
             services.AddSingleton(typeof(IScrapManager), manager);
+            services.AddSingleton(typeof(IScreenScraperAPI), api);
             services.AddSwaggerDocument();
             
         }

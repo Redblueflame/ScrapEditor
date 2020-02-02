@@ -12,6 +12,8 @@ namespace ScrapEditor
         public string DBLink { get; set; }
         public string DBCertPath { get; set; }
         public string DBName { get; set; }
+        public string DefaultUser { get; set; }
+        public string DefaultPassword { get; set; }
 
         public static ConfigurationFile LoadConfiguration(string fileName)
         {
@@ -30,7 +32,9 @@ namespace ScrapEditor
                 SoftName = "ScrapEditor",
                 DBLink = "http://live-test.ravendb.net",
                 DBCertPath = "none",
-                DBName = "ScrapEditor-Dev"
+                DBName = "ScrapEditor-Dev",
+                DefaultUser = "ReplaceMePlease",
+                DefaultPassword = "xxxyyyzzz"
             };
             using (StreamWriter file = File.CreateText(fileName))
             {

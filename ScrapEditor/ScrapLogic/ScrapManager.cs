@@ -43,9 +43,9 @@ namespace ScrapEditor.ScrapLogic
             }
             Console.WriteLine("Starting formatting of games...");
             //Format all games.
-            var formattedGames = new Dictionary<ulong, List<BasicInfo>>();
-            var helper = new Dictionary<string, ulong>();
-            ulong i = 0;
+            var formattedGames = new Dictionary<long, List<BasicInfo>>();
+            var helper = new Dictionary<string, long>();
+            long i = 0;
             foreach (var game in unlistedGames)
             {
                 if (!helper.ContainsKey(game.Name + game.Console))
@@ -90,6 +90,7 @@ namespace ScrapEditor.ScrapLogic
                 await session.SaveChangesAsync();
                 Console.WriteLine("Finished !");
             }
+
         }
         public List<string> GetConsoles()
         {
@@ -106,5 +107,45 @@ namespace ScrapEditor.ScrapLogic
             var provider = _providers.First(x => x.GetName() == info.Provider);
             return await provider.GetGameInfo(info);
         }
+
+        public string GetRegionId(string longname)
+        {
+            //TODO: Add a permanent Method
+            switch (longname)
+            {
+                case "United Kingdom":
+                    return "uk";
+                case "world":
+                    return "wor";
+                case "Spain (ES)":
+                    return "sp";
+                case "Germany (DE)":
+                    return "de";
+                case "France (FR)":
+                    return "fr";
+                default:
+                    return "wor";
+            }
+        }
+
+        public string GetRegionIdName(string longname)
+        {
+            switch (longname)
+            {
+                case "United Kingdom":
+                    return "eu";
+                case "world":
+                    return "wor";
+                case "Spain (ES)":
+                    return "eu";
+                case "Germany (DE)":
+                    return "eu";
+                case "France (FR)":
+                    return "eu";
+                default:
+                    return "wor";
+            }
+        }
+
     }
 }

@@ -6,7 +6,7 @@ namespace ScrapEditor.ScrapLogic
     public class GameInfo
     {
         public string Id { get; set; }
-        public ulong InternalId { get; set; }
+        public long InternalId { get; set; }
         public string Console { get; set; }
         public List<RegionalInfo<string>> Names { get; set; }
         public string Editor { get; set; }
@@ -38,16 +38,17 @@ namespace ScrapEditor.ScrapLogic
     }
     public class Game
     {
+        public string Id { get; set; }
         public Game()
         {
             ScrapInfos = new List<GameInfo>();
             Edits = new List<Edit>();
         }
-        public ulong ScrapEditorId { get; set; }
+        public long ScrapEditorId { get; set; }
         public List<GameInfo> ScrapInfos { get; set; }
         public GameInfo SavedInfo { get; set; }
-        
+        public bool IsUploadedToScreenScraper { get; set; }
+        public long ScreenScraperId { get; set; }
         public List<Edit> Edits { get; set; }
-        
     }
 }

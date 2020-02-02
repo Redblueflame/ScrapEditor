@@ -42,7 +42,7 @@ namespace ScrapEditor.Controllers
                 return BadRequest(new Error
                 {
                     ErrorName = "MaxElemByPage",
-                    ErrorMessage = "No console with this name is found."
+                    ErrorMessage = "Too big request ! The maximum is 50."
                 });
             } 
             using (var session = db.store.OpenSession()) // Open a session for a default 'Database'

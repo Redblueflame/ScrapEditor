@@ -30,7 +30,7 @@ namespace ScrapEditor.ScrapLogic
 
     public class BasicInfo
     {
-        public ulong ScrapEditorID { get; set; }
+        public long ScrapEditorID { get; set; }
         public string InternalId { get; set; }
         public string Link { get; set; }
         public string Name { get; set; }

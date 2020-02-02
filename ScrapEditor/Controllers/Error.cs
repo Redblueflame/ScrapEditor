@@ -1,11 +1,8 @@
 namespace ScrapEditor.Controllers
 {
-    public partial class GamesListController
+    public class Error
     {
-        public class Error
-        {
-            public string ErrorName;
-            public string ErrorMessage;
-        }
+        public string ErrorName;
+        public string ErrorMessage;
     }
 }
