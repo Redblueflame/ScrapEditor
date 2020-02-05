@@ -8,7 +8,8 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
-
+pool:
+    name: Default
 steps:
 - task: DotNetCoreCLI@2
   inputs:
