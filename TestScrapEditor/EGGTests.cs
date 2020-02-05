@@ -25,18 +25,18 @@ namespace TestScrapEditor
             var provider = new EGGProvider();
             var info = new BasicInfo
             {
-                Link = "http://www.everygamegoing.com/landingItem/index/machine_type_group_default_folder/dragon/publisher_folder/dacc/format_folder/tapes/item_title/747-Flight-Simulator-Dacc",
+                Link = "https://www.everygamegoing.com/landingItem/index/machine_type_group_default_folder/dragon/publisher_folder/ai/format_folder/tapes/item_title/Adventureland",
                 Console = "Dragon 32",
-                InternalId = "11702",
-                Name = "747 Simulator",
+                InternalId = "11505",
+                Name = "Adventureland",
                 Provider = "EveryGameGoing",
             };
             var game = await provider.GetGameInfo(info);
             Assert.AreEqual(
-                "No short description is available for this item yet. ", game.Description[0].Value);
-            Assert.AreEqual(game.Editor, "Dacc");
-            Assert.AreEqual("Arcade; Flight Simulator",game.Genres);
-            Assert.AreEqual("1985-03-01", game.ReleaseDate[0].Value);
+                "The first real text adventure, in which you must collect magical objects and return them to a safe location to win. ", game.Description[0].Value);
+            Assert.AreEqual("Adventure International", game.Editor);
+            Assert.AreEqual("Text Adventure", game.Genres);
+            Assert.AreEqual("1984-01-01", game.ReleaseDate[0].Value);
         }
     }
 }

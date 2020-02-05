@@ -32,7 +32,7 @@ namespace ScrapEditor
             try
             {
                 // TODO: Change the request system
-                var request = new RestRequest("jeuRecherche.php", Method.GET)
+                var request = new RestRequest("ssuserInfos.php", Method.GET)
                     .AddQueryParameter("devid", _config.DevID)
                     .AddQueryParameter("devpassword", _config.DevPassword)
                     .AddQueryParameter("softname", _config.SoftName)

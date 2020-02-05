@@ -54,8 +54,10 @@ namespace TestScrapEditor
             Assert.AreEqual("http://live-test.ravendb.net", config.DBLink);
             Assert.AreEqual("ScrapEditor-Dev", config.DBName);
             Assert.AreEqual("none", config.DBCertPath);
+            Assert.AreEqual("ReplaceMePlease", config.DefaultUser);
+            Assert.AreEqual("xxxyyyzzz", config.DefaultPassword);
+            Assert.That(config.AuthKey, Does.Match("^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"));
             var text = File.ReadAllText("test.json");
-            Assert.AreEqual("{\"DevID\":\"PleaseReplaceMe\",\"DevPassword\":\"PleaseReplaceMe\",\"SoftName\":\"ScrapEditor\",\"DBLink\":\"http://live-test.ravendb.net\",\"DBCertPath\":\"none\",\"DBName\":\"ScrapEditor-Dev\"}", text);
             File.Delete("test.json");
         }
 
