@@ -25,7 +25,7 @@ namespace TestScrapEditor
             var provider = new EGGProvider();
             var info = new BasicInfo
             {
-                Link = "https://www.everygamegoing.com/egg/landingItem/index/machine_type_group_default_folder/dragon/publisher_folder/dacc/format_folder/tapes/item_title/747-Flight-Simulator-Dacc",
+                Link = "http://www.everygamegoing.com//landingItem/index/machine_type_group_default_folder/dragon/publisher_folder/dacc/format_folder/tapes/item_title/747-Flight-Simulator-Dacc",
                 Console = "Dragon 32",
                 InternalId = "11702",
                 Name = "747 Simulator",
