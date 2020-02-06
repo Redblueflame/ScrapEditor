@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ using ScrapEditor.ScrapLogic;
 namespace ScrapEditor.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     [Route("/admin")]
     public class AdministrationController : ControllerBase
     {

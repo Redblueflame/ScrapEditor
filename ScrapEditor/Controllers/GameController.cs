@@ -225,7 +225,7 @@ namespace ScrapEditor.Controllers
         /// <param name="info">The info of the game</param>
         /// <param name="id">The ID of the game</param>
         /// <returns></returns>
-        [HttpPost("/{id}/")]
+        [HttpPost("/{id}")]
         public async Task<IActionResult> SaveGame([FromBody] GameInfo info, [FromRoute] long id)
         {
             using (var session = _db.store.OpenAsyncSession())
