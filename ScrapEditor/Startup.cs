@@ -24,7 +24,7 @@ namespace ScrapEditor
         public void ConfigureServices(IServiceCollection services)
         {
             // Add authorization
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 
             var config = ConfigurationFile.LoadConfiguration("config.json");
             var api = new ScreenScraperAPI(config);
