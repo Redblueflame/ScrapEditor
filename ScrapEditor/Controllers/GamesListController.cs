@@ -151,7 +151,7 @@ namespace ScrapEditor.Controllers
                 );
             }
         }
-
+        /*
         [HttpGet("/import/{id}")]
         [ProducesResponseType(typeof(ResultGame), 200)]
         [ProducesResponseType(typeof(Error), 404)]
@@ -159,6 +159,7 @@ namespace ScrapEditor.Controllers
         {
 
         }
+        */
     }
 
     public class ResultGame
