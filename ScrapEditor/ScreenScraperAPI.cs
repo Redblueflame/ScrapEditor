@@ -15,11 +15,16 @@ namespace ScrapEditor
     public class ScreenScraperAPI : IScreenScraperAPI
     {
         private readonly ConfigurationFile _config;
-        private RestClient _client;
+        private IRestClient _client;
         public ScreenScraperAPI(ConfigurationFile config)
         {
             _config = config;
             _client = new RestClient("https://www.screenscraper.fr/api2");
+        }
+        public ScreenScraperAPI(ConfigurationFile config, IRestClient client)
+        {
+            _config = config;
+            _client = client;
         }
         /// <summary>
         /// Check if login is valid on ScreenScraper
